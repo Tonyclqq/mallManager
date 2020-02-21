@@ -325,8 +325,10 @@
             > localStorage.setItem('token',data.token)
             > //第一个参数为保存的名字，第二个为保存的数据
             > ```
-   
-8. 项目-首页-布局容器-使用-样式调整
+
+## 项目-首页（home）-布局容器-使用-样式调整
+
+1. 项目-首页-布局容器-使用-样式调整
 
    1. ```html
       /*home.vue*/
@@ -373,7 +375,7 @@
 
       2. > index值不能一样
 
-   6. 项目-首页-进入首页的权限验证
+   6. x项目-首页-进入首页的权限验证
 
       1. > 如果没有登录过，就不能进入到home组件
          >
@@ -388,5 +390,31 @@
          >     }
          >   }
          > ```
-         >
-         > 
+
+   7. x项目-首页-头部-推出功能
+
+      1. ```
+         methods:{
+             handleSignout(){
+               //1.清楚token
+               localStorage.clear()
+               //2.提示
+               this.$message.success('退出成功')
+               //3.来到login组件
+               this.$router.push({name:'login'})
+             }
+           }
+         ```
+
+   8. 项目-用户管理-用户列表-新建组件-路由配置
+
+      1. home.vue 开启了路由模式 index值 --->path值
+
+      2. home.vue    man- --->router-view   main里面要写入router-view标签
+
+      3. 新建users.vue   
+
+      4. router/index.js   在路由表home中children配置users的路由
+
+         
+
