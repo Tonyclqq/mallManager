@@ -30,14 +30,15 @@ export default {
     //登录请求
     async handleLogin() {
       const res = await this.$http.post("login", this.formdata);
-      //console.log(res)
+      console.log(res);
       //对象结构赋值
       const {
-        //data,
+        data,
         meta: { msg, status }
       } = res.data;
       if (status === 200) {
-        console.log(res);
+        //0.保存token
+        localStorage.setItem('token',data.token)
         //1.跳转到home
         this.$router.push({ name: "home" });
         //提示成功
