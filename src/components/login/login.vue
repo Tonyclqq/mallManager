@@ -28,23 +28,23 @@ export default {
   },
   methods: {
     //登录请求
-    handleLogin() {
-      this.$http.post("login", this.formdata).then(res => {
-        //console.log(res)
-        //对象结构赋值
-        const {
-          //data,
-          meta: { msg, status }
-        } = res.data;
-        if (status === 200) {
-          //1.跳转到home
-          this.$router.push({ name: "home" });
-          //提示成功
-          this.$message.success(msg)
-        } else {
-          this.$message.warning(msg)
-        }
-      });
+    async handleLogin() {
+      const res = await this.$http.post("login", this.formdata);
+      //console.log(res)
+      //对象结构赋值
+      const {
+        //data,
+        meta: { msg, status }
+      } = res.data;
+      if (status === 200) {
+        console.log(res);
+        //1.跳转到home
+        this.$router.push({ name: "home" });
+        //提示成功
+        this.$message.success(msg);
+      } else {
+        this.$message.warning(msg);
+      }
     }
   }
 };
