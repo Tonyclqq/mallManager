@@ -372,3 +372,21 @@
       1. > 调整el-menu
 
       2. > index值不能一样
+
+   6. 项目-首页-进入首页的权限验证
+
+      1. > 如果没有登录过，就不能进入到home组件
+         >
+         > ```js
+         > /*要在创建目标那之前触发*/
+         > //new Vue之前自动触发 
+         >   beforeCreate(){
+         >     //获取token
+         >     const token = localStorage.getItem('token')
+         >     if(!token) {
+         >       this.$router.push({name:'login'})
+         >     }
+         >   }
+         > ```
+         >
+         > 
