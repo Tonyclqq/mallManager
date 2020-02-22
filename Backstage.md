@@ -409,12 +409,50 @@
    8. 项目-用户管理-用户列表-新建组件-路由配置
 
       1. home.vue 开启了路由模式 index值 --->path值
-
       2. home.vue    man- --->router-view   main里面要写入router-view标签
-
       3. 新建users.vue   
-
       4. router/index.js   在路由表home中children配置users的路由
 
-         
+   9. 项目-用户管理-用户列表-面包屑和搜索框
+
+      1. el-card  卡片  小容器
+      2. 面包屑  
+      3. el-row>el-col>el-input+el-button
+
+   10. 项目-用户管理-用户列表-引入表格组件
+
+       1. > el-table(data数据源[ ])  > el-table-column(label表头/prop=“数据”) >字符串数据
+
+       2. ```html
+          <el-table :data="tableData" style="width: 100%">
+                <el-table-column prop="date" label="日期" width="180"></el-table-column>
+                <el-table-column prop="name" label="姓名" width="180"></el-table-column>
+                <el-table-column prop="address" label="地址"></el-table-column>
+              </el-table>
+          ```
+
+   11. 项目-用户管理-用户列表-表头处理
+
+       1. > 按照效果  调整了表头的数量和Label
+
+       2. > type=”index”   ---->该列的每个单元格的内容从1开始的序号
+       
+   12. 项目-用户管理-用户列表-请求数据-设置请求头
+   
+       1. created(){  this.getUserList()}
+   
+       2. ```
+          methods:{getUserList(){发送请求}}
+          ```
+   
+       3. 接口文档中，除了登陆之外的所有请求，都需要授权 ---->设置请求头
+   
+       4. 找axios中关于请求头设置的代码
+   
+          1. ```
+              const AUTH_TOKEN = localStorage.getItem("token");
+                   	  this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
+             ```
+   
+       5. 发送请求
 
