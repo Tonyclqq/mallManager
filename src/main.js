@@ -13,7 +13,12 @@ import MyHttpServe from 'plugins/http'
 Vue.use(MyHttpServe)
 
 Vue.config.productionTip = false
-
+//引入moment时间插件
+import moment from 'moment'
+//全局过滤器 --处理日期
+Vue.filter('fmtdate',(v)=>{
+  return  moment(v).format('YYYY-MM-DD')
+})
 new Vue({
   router,
   render: h => h(App),

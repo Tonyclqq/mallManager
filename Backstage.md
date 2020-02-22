@@ -455,4 +455,87 @@
              ```
    
        5. 发送请求
+   
+   13. 项目-用户管理-用户列表-渲染数据-一般数据
+   
+       1. 解构赋值：给this.userlist = res.data.data.users
+   
+       2. ```
+          prop=""
+          username
+          email
+          mobile
+          create_time
+          mg_state
+          ```
+   
+   14. 项目-用户管理-用户列表-渲染数据-日期格式处理
+   
+       1. main.js全局过滤器 fmtdate
+   
+       2. 第一步：prop=“create_time | fmtdate” 不行
+   
+       3. 第二步：如果单元格的内容只能显示文本
+   
+          1. ```html
+              <el-table-column 
+                   prop="create_time" 
+                   label="创建时间">
+                  {{create_time | fmtdate }}
+             </el-table-column>
+             ```
+   
+       4. 如果想要显示不是文本，需要给该内容外层加容器tempalte
+   
+          1. > 不同的组件的数据不是共享的，而是独立的作用域	
+   
+          2. ```html
+             
+             <el-table-column 
+                   prop="create_time" 
+                   label="创建时间">
+                  <template>
+                  {{create_time | fmtdate }}
+                  </template>
+             </el-table-column>
+             ```
+   
+       5. 最终写法
+   
+          1. > 1. slot-scope 作用：传值
+             > 2. slot-scope的值会自动去上一级找最外层标签el-table所绑定的数据userList
+             > 3. slot-scope=“scope” 此时 “scope”==userlist数组
+             > 4. scope.row是数组的每个对象
+             > 5. scope.row.create_time我们要用的数据
+   
+          2. ```
+             
+             <el-table-column 
+                   label="创建时间">
+                  <template slot-scope="scope">
+                   {{scope.row.create_time | fmtdate}}
+                  </template>
+             </el-table-column>
+             ```
+   
+   15. 项目-用户管理-用户列表-渲染数据-用户状态开开关
+   
+       1. ```html
+           <el-table-column  label="用户状态">
+                 <template slot-scope="scope">
+                    <el-switch 
+                         v-model="scope.row.mg_state" 
+                         active-color="#13ce66" 
+                         inactive-color="#ff4963">
+                    </el-switch>
+                 </template>
+                </el-table-column>
+          ```
+   
+   16. 项目-用户管理-用户列表-渲染数据-操作按钮
+   
+       1. 操作里面不是字符串
+       2. template 容器 slot-scope = “scope”
+       3. el-button
+       4. size =“mini ”   plain=“true”
 
