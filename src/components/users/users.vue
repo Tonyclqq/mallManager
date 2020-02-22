@@ -10,8 +10,16 @@
     <!-- 2.搜索 -->
     <el-row class="searchRow">
       <el-col>
-        <el-input placeholder="请输入内容" v-model="query" class="input-search">
-          <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input 
+            @clear="loadUserList"
+            clearable
+            placeholder="请输入内容" 
+            v-model="query" 
+            class="input-search">
+          <el-button 
+              @click="searchUser"
+              slot="append" 
+              icon="el-icon-search"></el-button>
         </el-input>
         <el-button type="success">添加用户</el-button>
       </el-col>
@@ -37,15 +45,27 @@
         </template>
       </el-table-column>
       <el-table-column prop="address" label="操作">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" plain="true" icon="el-icon-edit" circle></el-button>
-           <el-button type="danger" size="mini" plain="true" icon="el-icon-delete" circle></el-button>
-          <el-button type="success" size="mini" plain="true" icon="el-icon-check" circle></el-button>
-          <el-button type="danger" size="mini" plain="true" icon="el-icon-delete" circle></el-button>
+        <template slot-scope="">
+          <el-button type="primary" size="mini" plain icon="el-icon-edit" circle></el-button>
+           <el-button type="danger" size="mini" plain icon="el-icon-delete" circle></el-button>
+          <el-button type="success" size="mini" plain icon="el-icon-check" circle></el-button>
+          <el-button type="danger" size="mini" plain icon="el-icon-delete" circle></el-button>
         </template>
       </el-table-column>
     </el-table>
     <!-- 4.分页 -->
+     <div class="block">
+    <span class="demonstration">完整功能</span>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pagenum"
+      :page-sizes="[2, 4, 6, 8]"
+      :page-size="pagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
+  </div>
   </el-card>
 </template>
 
@@ -77,8 +97,27 @@ export default {
   mounted() {},
 
   methods: {
+    //清空搜索框  重新获取数据
+    loadUserList(){
+         this.getUserList()
+    },
+    //搜索用户
+    searchUser(){
+        this.getUserList()
+    },
+    //分页相关的方法
+     handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+        this.pagesize = val
+       // this.pagenum = 1
+        this.getUserList()
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+        this.pagenum =val
+        this.getUserList()
+      },
     //获取用户列表的请求
-
     async getUserList() {
       //     参数名	参数说明	备注
       // query	查询参数	可以为空

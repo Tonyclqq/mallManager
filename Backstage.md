@@ -538,4 +538,34 @@
        2. template 容器 slot-scope = “scope”
        3. el-button
        4. size =“mini ”   plain=“true”
+   
+   17. 项目-用户管理-用户列表-分页组件-文档-引入
+   
+       > 该接口支持分页  url参数中有 pagenum pagesize
+   
+       1. @size-change   每页显示条数变化时，触发
+       2. @current-change 当前页改变时，触发
+       3. current-page 设置当前页是第几页
+       4. page-sizes=[2,4,6,8]每页多少条数据数组
+       5. page-size设置显示多少条
+       6. total数据总数
+   
+   18. 项目-用户管理-用户列表-分页组件-配置数据
+   
+       1. current-page=“pagenum”
+       2. page-size =2
+       3. :total= “total”
+       
+   19. 项目-用户管理-用户列表-分页组件-分页请求
+   
+       1. 每页显示条数改变  ---》 this.pagesize = var   ---》this.getUserList()
+       2. 页码改变时  ---->this.pagenum =val  --this.getUserlist()
+       3. 希望档每页条数改变时，从第一页开始显示this.pagenum = 1 ----->currpage = 1
+   
+   20. 项目-用户管理-用户列表-搜索用户
+   
+       1. 给搜索数日狂绑定query v-model=“query”
+       2. 点击搜索按钮  发送请求
+       3. 一键清除 clearable
+       4. 点击清除按钮  ---.重新获取数据
 
