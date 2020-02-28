@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 <template>
   <el-card class="box-card">
     <!-- 1.面包屑 -->
@@ -25,7 +26,7 @@
     <!-- 3.表格 -->
     <el-table :data="userList" style="width: 100%">
       <el-table-column type="index" label="#" width="60"></el-table-column>
-      <el-table-column prop="role_name" label="姓名" width="120"></el-table-column>
+      <el-table-column prop="username" label="姓名" width="120"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
       <el-table-column prop="mobile" label="电话"></el-table-column>
       <el-table-column label="创建时间">
@@ -153,7 +154,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisibleRol = false">取 消</el-button>
-          <el-button type="primary" @click="dialogFormVisibleRol = false">确 定</el-button>
+          <el-button type="primary" @click="setRol">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -189,6 +190,7 @@ export default {
       },
       //分配角色
       currRoleId:-1,
+      curruserId:-1,
       currUserName:'',
       //保存所有的角色数据
       roles:[]
@@ -206,12 +208,24 @@ export default {
   mounted() {},
 
   methods: {
-    //
+    //分配角色-发送请求
+    async setRol(){
+      // eslint-disable-next-line no-unused-vars
+      const res = await this.$http.put(`users/${this.curruserId}/role`,{
+        rid:this.currRoleId
+      })
+      //关闭对话框
+      this.dialogFormVisibleRol = false
+      
+    },
     //分配角色
     async showSetUserRoleDia(user) {
       this.currUserName = user.username
+      //给currUserId赋值
+      this.curruserId = user.id
       //获取所有的角色
       const res1 = await this.$http.get(`roles`)
+      
       this.roles = res1.data.data
       //获取当前用户的角色id
       const res = await this.$http.get(`users/${user.id}`)
@@ -219,14 +233,14 @@ export default {
       this.currRoleId = res.data.data.rid
       //显示对话框
       this.dialogFormVisibleRol = true;
-      console.log(res1)
     },
     //发送修改用户状态
     async changeMgState(user) {
+      // eslint-disable-next-line no-unused-vars
       const res = await this.$http.put(
         `users/${user.id}/state/:${user.mg_state}`
       );
-      console.log(res);
+      //console.log(res);
     },
     //编辑用户--发送请求
     async editUser() {
@@ -255,7 +269,7 @@ export default {
           //1.data中找userId  ×
           //2.把userId以showDeleUserMsgBox参数形式进来
           const res = await this.$http.delete(`users/${userId}`);
-          console.log(res);
+          //console.log(res);
           if (res.data.meta.status === 200) {
             this.pagenum = 1;
             //更新视图
@@ -277,7 +291,7 @@ export default {
     //添加用户-发送请求
     async addUser() {
       const res = await this.$http.post("users", this.form);
-      console.log(res);
+      //console.log(res);
       const {
         meta: { status, msg }
       } = res.data;
@@ -310,13 +324,13 @@ export default {
     },
     //分页相关的方法
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+     // console.log(`每页 ${val} 条`);
       this.pagesize = val;
       // this.pagenum = 1
       this.getUserList();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+     // console.log(`当前页: ${val}`);
       this.pagenum = val;
       this.getUserList();
     },

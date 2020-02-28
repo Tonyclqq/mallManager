@@ -714,4 +714,26 @@
        3. 通过请求获取当前用户的rid
        4. 给el-select 中v-model的绑定的数据赋值 this.currRoleId = res.data.data.rid
        5. rid接口文档的参数名是role_id
-
+       
+   33. 项目-用户管理-用户列表-分配角色-修改用户角色
+   
+       1. 通过试图操作--->修改了label -->value值变化----->el-select v-model绑定的数据变化
+   
+       2. currRoleId
+   
+          1. 在setRple方法中要使用用户id，在data声明currUserId：-1
+          2. 在showSetUserRoleDia(){this.currUserId=  user.id}
+   
+       3. ```js
+           async setRol(){
+                // eslint-disable-next-line no-unused-vars
+                const res = await this.$http.put(`users/${this.curruserId}/role`,{
+                  rid:this.currRoleId
+                })
+                //关闭对话框
+                this.dialogFormVisibleRol = false
+                
+              },
+          ```
+   
+   34. 
