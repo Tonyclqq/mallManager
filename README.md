@@ -764,3 +764,8 @@
        2. 新建myBread.vue
        3. 在自定义组件中提供数据 level1,level2 --->props:[来源使用组件时，传的值]
        4. 注册为全局组件，main.js引入，Vue.component(MyBread.name ,MyBread)
+   
+   38. 项目-权限管理-权限列表-获取权限列表数据
+   
+       1. 除了登陆之外的所有请求 都需要设置头部信息
+       2. type参数 值 list或者tree
