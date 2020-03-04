@@ -30,8 +30,6 @@ export default {
   methods: {
     async getRightList() {
       //设置请求头信息
-      const AUTH_TOKEN = localStorage.getItem("token");
-      this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
       //获取数据
       const res = await this.$http.get(`rights/list`);
        this.rightList =  res.data.data
