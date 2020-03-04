@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
+
+//导入自己组建的面包屑组件,MyBread其实是组件选项所在的对象{template:'},
+import MyBread from 'components/cuscom/myBread.vue'
 //引入路由文件
 import router from './router/idnex'
 //引入全局css
@@ -19,6 +22,8 @@ import moment from 'moment'
 Vue.filter('fmtdate',(v)=>{
   return  moment(v).format('YYYY-MM-DD')
 })
+//全局自定义组件
+Vue.component(MyBread.name ,MyBread)
 new Vue({
   router,
   render: h => h(App),
