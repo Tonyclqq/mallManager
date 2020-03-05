@@ -342,8 +342,8 @@ export default {
       // pagesize	每页显示条数	不能为空
       //需要授权的 API ，必须在请求头中使用 Authorization 字段提供 token 令牌
       //已经在plugins/http.js中设置过
-      // const AUTH_TOKEN = localStorage.getItem("token");
-      // this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
+       const AUTH_TOKEN = localStorage.getItem("token");
+      this.$http.defaults.headers.common["Authorization"] = AUTH_TOKEN;
       // // 第一种写法
       //const res = await this.$http.get("users", {
       //   params: {

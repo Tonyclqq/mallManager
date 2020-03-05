@@ -778,4 +778,8 @@
    
           > 请求拦截器 config.header
    
-          > 相应拦截器(目前没使用)
+          > 响应拦截器(目前没使用)
+       
+   40. 项目-权限管理-权限列表-表格展示
+   
+       1. 引入el-table 绑定数据rightList(authName   path   level)
