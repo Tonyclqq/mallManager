@@ -983,6 +983,63 @@
        10. //更新视图
 
               this.getRoleList()
+       
+   61. 项目-首页-侧边栏-动态导航
+   
+       1. get(‘menus’)获取导航的所有数据
+   
+       2. order
+   
+       3. path标识
+   
+       4. children
+   
+       5. v-for
+   
+       6. > 在写之后的路由配置时，path不能瞎写了
+   
+   62. 项目-效果演示-不同角色用户登录-显示对应权限
+   
+       1. 每个角色有不同的权限
+       2. 新建用户   分配角色
+       3. 回到登录页  登陆新用户   ->token
+       4. 渲染home组建的侧边栏时 使用header 中的token
+       5. 发送getMenus()也会使用header
+       
+   63. 项目-不同角色用户登录-显示对应权限-导航守卫
+   
+       1. 在home.vue中判断token，很麻烦
+   
+       2. 导航守卫
+   
+          1. 配置生效前 先来到路由守卫的回调函数
+   
+          2. to 要去的路由配置   from当前的路由配置
+   
+          3. next()让当前的路由配置继续生效
+   
+          4. ```js
+             router.beforeEach((to,from,next)=>{
+                 if(to.path === '/login'){
+                     next()
+                 } else {
+                     const token = localStorage.getItem('token')
+                     if(!token){
+                         Message.warning('请先登录')
+                         router.push({name:'login'})
+                     } else {
+                         next()
+                     }
+                     
+                 }
+             })
+             ```
+   
+   64. 
+
+
+
+
 
 
 

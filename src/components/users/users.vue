@@ -238,9 +238,9 @@ export default {
     async changeMgState(user) {
       // eslint-disable-next-line no-unused-vars
       const res = await this.$http.put(
-        `users/${user.id}/state/:${user.mg_state}`
+        `users/${user.id}/state/${user.mg_state}`
       );
-      //console.log(res);
+     console.log(res);
     },
     //编辑用户--发送请求
     async editUser() {
