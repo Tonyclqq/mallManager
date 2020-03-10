@@ -4,11 +4,15 @@ import {Message} from 'element-ui'
 vue.use(vueRouter)
 
 const Login = () => import('components/login/login.vue');
-const Home = () =>  import('components/home/home.vue');
+const Home = ()  =>  import('components/home/home.vue');
 const Users = () => import('components/users/users.vue');
 const Right = () => import('components/rights/right.vue');
 
+const GoodsList = () => import('components/goods/goodslist.vue')
+const GoodsAdd= () => import('components/goods/goodsadd.vue')
+const CateParams= () => import('components/goods/cateparams.vue')
 const Role = () => import('components/rights/role.vue');
+const GoodsCate = () => import('components/goods/goodscate.vue')
 const routes = [
     {
         path: '',
@@ -38,6 +42,26 @@ const routes = [
                 name:'roles',
                 path:'/roles',
                 component:Role
+            },
+            {
+                name:'goods',
+                path:'/goods',
+                component:GoodsList
+            },
+            {
+                name:'goodsadd',
+                path:'/goodsadd',
+                component:GoodsAdd
+            },
+            {
+                name:'params',
+                path:'/params',
+                component:CateParams
+            },
+            {
+                 name:'categories',
+                 path:'categories',
+                component:GoodsCate
             }
         ]
         

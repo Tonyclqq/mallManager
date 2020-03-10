@@ -985,21 +985,21 @@
               this.getRoleList()
        
    61. 项目-首页-侧边栏-动态导航
-   
+
        1. get(‘menus’)获取导航的所有数据
-   
+
        2. order
-   
+
        3. path标识
-   
+
        4. children
-   
+
        5. v-for
-   
+
        6. > 在写之后的路由配置时，path不能瞎写了
-   
+
    62. 项目-效果演示-不同角色用户登录-显示对应权限
-   
+
        1. 每个角色有不同的权限
        2. 新建用户   分配角色
        3. 回到登录页  登陆新用户   ->token
@@ -1007,17 +1007,17 @@
        5. 发送getMenus()也会使用header
        
    63. 项目-不同角色用户登录-显示对应权限-导航守卫
-   
+
        1. 在home.vue中判断token，很麻烦
-   
+
        2. 导航守卫
-   
+
           1. 配置生效前 先来到路由守卫的回调函数
-   
+
           2. to 要去的路由配置   from当前的路由配置
-   
+
           3. next()让当前的路由配置继续生效
-   
+
           4. ```js
              router.beforeEach((to,from,next)=>{
                  if(to.path === '/login'){
@@ -1034,8 +1034,437 @@
                  }
              })
              ```
-   
-   64. 
+
+   64. 项目-商品管理-功能演示
+
+       1. 商品列表-添加商品
+       2. 分类参数
+          1. 动态参数(√)
+          2. 静态参数(X)
+       3. 商品分类
+          1. 表格中的树形结构
+
+   65. 项目-商品管理-商品列表-准备组件
+
+       1.  goodslist.vue(只完成了一个数据渲染，其他搜索的功能还没完成)
+       2.  配置路由 表示path是goods
+       
+   66. 项目-商品管理-添加商品-新建组件配置路由
+
+       1. goods/goodsadd.vue
+       2. 配置路由 path:/‘goodsadd’
+       3. 点击列表组件中ed添加商品按钮 js编程式导航
+
+   67. 项目-商品管理-添加商品-步骤条
+
+       1. 面包屑
+       2. 消息提示 el-alert
+       3. 步骤条 el-steps
+          1. :active=“1”如果=2，表示当前是第二步
+
+   68. 项目--商品管理--添加商品--tabs
+
+       1. ```
+          引入了el-tabs  表单元素  v-model="active"
+          如果选中的第二个el-tab-pane  此时active的值就是该tab的name值  也就是2
+          让el-steps步骤条的:active属性的值和v-model绑定的属性 是同一个
+          ```
+
+       2. 
+
+       3. ```html
+            <el-tabs v-model="active" tab-position="left" style="height: 200px;">
+              <el-tab-pane name="1" label="基本信息">基本信息</el-tab-pane>
+              <el-tab-pane name="2" label="商品参数">商品参数</el-tab-pane>
+              <el-tab-pane name="3" label="商品属性">商品属性</el-tab-pane>
+              <el-tab-pane name="4" label="商品图片">商品图片</el-tab-pane>
+              <el-tab-pane name="5" label="商品内容">商品内容</el-tab-pane>
+            </el-tabs>
+          ```
+
+   69. 项目-商品管理-添加商品-基本信息-表单绑定数据
+
+       1. 最外层包裹 el-form   调整了样式 voerfolw:auto
+       2. v-model=“form”
+       3. form数据的来源 添加商品的网络请求
+       4. 基本信息tab--一般表单元素的数据绑定(名称/加个/重量/数量)
+
+   70. 项目-商品管理-添加商品-基本信息-级联选择器-文档-引入
+
+       1. :options=数据list[]
+
+       2. v-model=“selectedOptions”最终选择的label对应的value会在selectedOptions数组中
+
+       3. :props=“{label:?,value:,children:?}”
+
+       4. ```js
+          list:[
+              {
+                  goodsnname:'家电'
+                  id:1,
+                  childrenn:[
+                  	{
+                  		goodsname:'a家电'
+                          id:100,
+                          childrenn:[
+                  			
+                  		]
+             			}
+                  ]
+              }
+          ]
+          ```
+
+       5. @change=“选择改变时触发”
+
+       6. ```html
+          <el-cascader
+            expand-trigger="hover"
+            :options="options"
+            v-model="selectedOptions"
+            :props="defaultProp"
+            @change="handleChange">
+          </el-cascader>
+          ```
+
+   71. 项目-商品管理-添加商品-基本信息-级联选择器-获取分类数据
+
+       1. created(){}
+       2. methods:{ getGoodCate(){发送请求 type=3}}
+       3. this.options = res.data.data
+       4. defaultProp:{label:’cate_name’,value:’id’,children:’children’}
+       5. selectedOptions:[1,3,6]设置默认分类
+
+   72. 项目-商品管理-添加分类-商品参数-获取动态参数数据
+
+       1. 必须要先选择三级分类--》点击第二个tab才会获取数据
+
+       2. if(this.active===‘2’){if(this.selectoroptions.length!====3){提示return}发送请求}
+
+       3. ```
+          categories/${this.selectedOptions[2]}/attributes?sel=many
+          ```
+
+          sel=many  获取的是动态参数数据
+
+   73. 项目-商品管理-添加商品-商品参数-复选框组-文档-引入
+
+       1. 商品参数-----》动态参数数据  ---》this.arrDyparams
+       2. el-form-item+复选框组
+       3. v-for 遍历el-form-item和里面的el-checkbox
+       4. this.arrDyparams 中的每个对象的 attr_vals字符串  ---split数组
+       5. `item.attr_vals = item.attr_vals.length===0 ? []: item.attr_vals.trim().split(',')`
+
+   74. 项目-商品管理-添加商品-商品参数-复选框组-调整样式
+
+       1. border
+       2. el-checkbox-group v-model=“item1.attr_vals”.
+
+   75. 项目-商品管理-添加商品-商品属性-获取静态参数
+
+       1. 如果选中了第三个tab  this.active===‘3’同时分类数组长度=====3
+       2. sel=only
+       3. 静态参数的数据 是给商品属性用的
+
+   76. 项目-商品管理-添加商品-商品参数-布局
+
+       1. v-for遍历
+
+       2. ```html
+          <el-form-item 
+              :label="item.attr_name" 
+              v-for="(item , i) in arrStaticparams" 
+              :key="i">
+              <el-input v-model="item.attr_vals"/>
+          </el-form-item>
+          ```
+
+   77. 项目-商品管理-添加商品-图片上传-文档-引入
+
+       1. el-uoload
+       2. action 全路径
+       3. headers  头部
+       4. :on-remove= “移除图片触发的方法”
+       5. :on-preview=“”
+       6. :on-success=“”
+
+   78. 项目-商品管理-添加商品-图片上传-配置属性
+
+       1. action=“http开头的全路径”
+       2. headers:{Authorization:localStorage.getItem('token')}
+       3. 除了登录请求 都需要设置头部
+       4. file.response.data.tmp_path
+       5. file.data.tmp_path图片临时上传的路径
+
+   79. 项目-商品管理-添加商品-商品内容-富文本编辑器
+
+       1. `npm install vue-quill-editor --save`
+       2. 局部安装，引入-注册-安装
+       3. 插件查找----》github + npm  +vue官网
+       4. v-model=“form.goods_introduce”
+
+   80. 项目-商品管理-添加商品-表单数据分析
+
+       1. ```js
+          /**goods_name	商品名称	不能为空
+                   goods_cat	以为','分割的分类列表	不能为空   ---》级联选择器绑定的数据
+                   goods_price	价格	不能为空
+                   goods_number	数量	不能为空
+                   goods_weight	重量	不能为空
+                   goods_introduce	介绍	可以为空
+                   pics	上传的图片临时路径（对象）	可以为空
+                   attrs	商品的参数（数组） 
+          */
+          ```
+
+   81. 项目-商品管理-添加商品-表单数据处理-分类和图片
+
+       1. this.form.goods = this.selectoption.join(‘,’)
+
+       2. 在临时上传成功是 给Pics添加元素
+
+       3. 在移除图片
+
+          1. findIndex 找索引
+          2. splice(索引，1)
+
+       4. ```js
+            handleRemove(file) {
+                //file.response.data.tmp_path
+                console.log(file);
+                //this.form.pics移除当前x掉的图片
+                //先获取该图片的索引
+                //[{pic:图片路径},]
+                let index = this.form.pics.findIndex(item => {
+                 return item.pic === file.response.data.tmp_path
+                })
+                this.form.pics.splice(index,1)
+              },
+              handleSuccess(file) {
+                //tmp_path: "tmp_uploads\cb16fd357dc1db154650c18cd8f30fcb.png"
+                console.log(file);
+                this.form.pics.push({
+                  pic:file.data.tmp_path
+                })
+              },
+          ```
+
+   82. 项目-商品管理-添加商品-表单数据处理-attrs
+
+       1. 文档要求 this.form.attrs[{attr_id:?,attr_value:?}]
+       2. 动态参数数组+静态参数数组 map遍历 返回新数组 arr1 &arr2
+       3. 合并数组  this.form.attrs = [...arr1,...arr2]
+       4. 发送请求
+       5. 回到商品列表页
+
+   83. 项目-商品管理-分类参数-新建组件-路由配置
+
+       1. goods/cateparams.vue
+       2. 路由配置 path:”/params”
+
+   84. 项目-商品管理-分类参数-动态参数-布局-配置级联选择器
+
+       1. el-form  > el-form-item > el-cas级联选择器
+       2. 把goodsadd.vue中的级联选择器进行修改
+       3. create(){this.getGoodsCate()}
+
+   85. 项目-商品管理-分类参数-动态参数-获取动态参数数据
+
+       1. 级联选择器选项发生改变时，同时选择了三级分类
+
+       2. 获取动态参数数组
+
+       3. ```js
+           async handleChange() {
+                if(this.selectedOptions.length === 3){
+                   const res = await this.$http.get(
+                    `categories/${this.selectedOptions[2]}/attributes?sel=many`
+                  );
+                  this.arrDyparams = res.data.data;
+                  this.arrDyparams.forEach(item => {
+                    item.attr_vals =
+                      item.attr_vals.length === 0 ? [] : item.attr_vals.trim().split(",");
+                  });
+                }
+              },
+          ```
+
+   86. 项目-商品管理-分类参数-动态参数-表格渲染
+
+       1. el-table :data=“arrDyparams”
+       2. 属性名称  prop=“attr_name”
+       3. 第一列 type=“expand”
+
+   87. 项目-商品管理-分类参数-动态参数-动态编辑-tag-文档-引入
+
+       1. 动态tag编辑
+
+       2. 删除
+
+       3. 添加
+
+       4. ###### html(el-tag+el-input-button)+css+js(handleClose  +showInput+handleInputConfirm )
+
+   88. 项目-商品管理-分类参数-动态参数-动态编辑-tag-配置-完成
+
+       1. el-tag v-for=“tag in scope.row.attr_vals”
+       2. handleInputConfirm(scope.row.attr_vals)
+       3. handleInputConfirm(scope.row.attr_vals)
+       4. handleClose(scope.row.attr_vals,tag)
+
+   89. 项目-商品管理-分类参数-动态参数-删除-发送请求
+
+       1. ```js
+           async handleClose(scope_row,tag) {
+                  scope_row.attr_vals.splice(scope_row.attr_vals.indexOf(tag), 1);
+                  //发送请求   categories/:id/attributes/:attrId
+                  //put 请求体
+                  /**
+                   * 
+                   * attr_name
+                   * attr_sel
+                   * attr_vals
+                   */
+                  let putData = {
+                    attr_name:scope_row.attr_name,
+                    attr_sel:'many',
+                    attr_vals:scope_row.attr_vals.join(','),
+                  }
+                  const res = await this.$http.put(`categories/${this.selectedOptions[2]}/attributes/${scope_row.attr_id}`,putData)
+                  console.log(res)
+                },
+          ```
+
+       2. attr_vals以`,`分割的字符串
+
+       3. 删除请求的接口  put请求体 接口文档中没有
+
+       4. ```js
+          attr_name:scope_row.attr_name,
+          attr_sel:'many',
+          attr_vals:scope_row.attr_vals.join(','),
+          ```
+
+   90. 项目-商品管理-分类参数-动态参数-添加-发送请求
+
+       1. ```js
+           async handleInputConfirm(scope_row) {
+                  let inputValue = this.inputValue;
+                  if (inputValue) {
+                    scope_row.attr_vals.push(inputValue);
+                    //发送请求
+                    let putData = {
+                    attr_name:scope_row.attr_name,
+                    attr_sel:'many',
+                    attr_vals:scope_row.attr_vals.join(','),
+                  }
+                  const res = await this.$http.put(`categories/${this.selectedOptions[2]}/attributes/${scope_row.attr_id}`,putData)
+                  console.log(res)
+                  }
+                  this.inputVisible = false;
+                  this.inputValue = '';
+                },
+          ```
+
+       2. 添加属性值和删除属性值是同一个请求
+
+   91. 项目-商品管理-分类参数-静态参数-布局-获取数据
+
+       1. 点击第二个tab请求静态参数数组数据
+       2. el-table布局
+       3. 把动态参数的表格进行修改
+
+   92. 项目---商品管理---商品分类---准备组件---路由配置
+
+       1. 准备组件goods/goodscate.vue
+       2. 路由配置：path:’/categories’
+
+   93. 项目---商品管理---商品分类---准备组件---代码梳理
+
+       1. 对话框中的级联选择器数据还未获取
+
+   94. 项目---商品管理---商品分类-element-tree-grid-文档-引入
+
+       1. 单元格--->树形结构 el-table  ->elementui table插件
+
+       2. 插件名  element-tree-grid -->增强了el-table的单元格
+
+       3. npm i element-tree-grid
+
+       4. 导入
+
+       5. 局部注册
+
+       6. <el-tree-grid></el-tree-grid>
+
+       7. treekey:nodekey：结点唯一标识
+
+       8. parentKey:父节点的id
+
+          levelkey：当前节点的级别
+
+          childkey：字节点
+
+   95. 项目---商品管理---商品分类-element-tree-grid-配置
+
+       1. treeKey等属性值的来源 el-table :data=“list”
+
+       2. ```
+           <el-tree-grid 
+                    prop="cat_name"
+                    lavel="分类名称"
+                    treeKey="cat_id"
+                    parentKey="cat_pid"
+                    levelKey="cat_level"
+                    childKey="children"
+                    ></el-tree-grid>
+          ```
+
+   96. 项目-商品管理-商品分类--添加分类-打开对话框
+
+       1. 点添加家分类按钮---打开对话框
+       2. 获取二级分类的数据  type=2
+       3. 不能给三级分类子集添加四级分类
+
+   97. 项目-商品管理-商品分类--添加分类--发送请求
+
+       1. 只能添加三级分类
+
+       2. ```js
+          async addCate() {
+                /*
+                          cat_pid	分类父 ID	不能为空
+                          cat_name	分类名称	不能为空
+                          cat_level	分类层级	不能为空
+                          //三种情况  1.一级分类  selectionOptions.length==0  cat_pid=0 cat_level=0
+                                      2.二级分类  selectionOptions.length==1  cat_pid=selectionOptions[0]  cat_level=1
+                                      3.三级分类  selectionOptions.length==2  cat_pid=selectionOptions[1]  cat_level=2
+                       */
+                if (this.selectedOptions.length === 0) {
+                  this.form.cat_pid = 0;
+                  this.form.cat_level = 0;
+                } else if (this.selectedOptions.length === 1) {
+                  this.form.cat_pid = this.selectedOptions[0];
+                  this.form.cat_level = 1;
+                } else if (this.selectedOptions.length === 2) {
+                  this.form.cat_pid = this.selectedOptions[1];
+                  this.form.cat_level = 2;
+                }
+                const res = await this.$http.post(`categories`,this.form)
+                console.log(res)
+                //更新视图
+                this.getGoodsCate()
+                //关闭对话框
+                this.dialogFormVisibleAdd =false ;
+                this.form ={}
+              },
+          ```
+
+   98. 
+
+
+
+
 
 
 
