@@ -1556,7 +1556,199 @@
            </style>
            ```
 
-        9. 
+
+# vue全家桶对项目的优化
+
+## 1.1项目优化策略
+
+- 生成打包报告
+- 第三方库启用cdn
+- element-ui组件按需加载
+- 路由懒加载
+- 首页内容定制
+
+## 1.2为项目添加进度条的效果
+
+1. 安装包`npm i nprogress -S`
+
+2. 在axios的请求和响应中去调用nprogress.start()&nprogress.done()函数
+
+3. //导入nprogress 包 对应的js和css
+
+4. ```
+   import NProgress from 'nprogress'
+   import 'nprogress/nprogress.css'
+   ```
+
+5. 请求拦截器
+
+6. ```js
+   axios.interceptors.request.use(config =>{
+   	NProgress.start()
+   	return config
+   })
+   ```
+
+   想要拦截器
+
+7. ```js
+   axios.interceptors.response.use(config =>{
+   	NProgress.done()
+   	return config
+   })
+   ```
+
+## 项目优化
+###  项目优化策略
+1. 生成打包报告
+打包时，为了直观地发现项目中存在的问题，可以在打包时生成报告。生成报告的方式有两种：
+①通过命令行参数的形式生成报告
+
+```js
+// 通过 vue-cli 的命令选项可以生成打包报告 // --report 选项可以生成 report.html 以帮助分析包内容 vue-cli-service build --report
+```
+②通过可视化的UI面板直接查看报告（推荐） 在可视化的UI面板中，通过控制台和分析面板，可以方便地看到项目中所存在的问题。
+
+## 1.4通过vue.config.js修改webpack的默认配置
+
+- 通过vue-cli4.0工具生成的项目，默认隐藏了所有的webpack的配置项，目的是为了屏蔽项目的配置过程，让coder把工作中心放到具体功能和业务逻辑的实现上
+- 如果程序员有修改 webpack 默认配置的需求，可以在项目根目录中，按需创建 vue.config.js 这个配置文件，从而对项目的打包发布过程做自定义的配置（具体配置参考 https://cli.vuejs.org/zh/config/#vue-config-js）。
+
+## 1.5 为开发模式与发布模式指定不同的打包入口
+
+默认情况下，Vue项目的开发模式与发布模式，共用同一个打包的入口文件（即 src/main.js）。为了将项目的开发过程与发布过程分离，我们可以为两种模式，各自指定打包的入口文件，即：
+
+- 开发模式的入口文件为 src/main-dev.js
+- 发布模式的入口文件为 src/main-prod.js
+
+## configureWebpack 和 chainWebpack
+
+在 vue.config.js 导出的配置对象中，新增 configureWebpack 或 chainWebpack 节点，来自定义 webpack 的打包配置。 在这里， configureWebpack 和 chainWebpack 的作用相同，唯一的区别就是它们修改 webpack 配置的方式不同：
+①chainWebpack 通过链式编程的形式，来修改默认的 webpack 配置
+②configureWebpack 通过操作对象的形式，来修改默认的 webpack 配置 两者具体的使用差异，可参考如下网址： https://cli.vuejs.org/zh/guide/webpack.html#webpack-%E7%9B%B8%E5%85%B3
+
+**示例**`通过chainWebpack`自定义打包入口
+
+```js
+module.exports = { chainWebpack: config => { config.when(process.env.NODE_ENV === 'production', config => { config.entry('app').clear().add('./src/main-prod.js') }) config.when(process.env.NODE_ENV === 'development', config => { config.entry('app').clear().add('./src/main-dev.js') }) } 
+}
+```
+
+## 1.6 通过 externals 加载外部 CDN 资源
+
+1. 具体配置代码如下：（在vue.config.js中配置）
+```js
+config.set('externals', {
+vue: 'Vue', 
+'vue-router': 'VueRouter',
+axios: 'axios', 
+lodash: '_',
+echarts: 'echarts',
+nprogress: 'NProgress',
+'vue-quill-editor': 'VueQuillEditor'
+})
+```
+2. 在index.html文件的头部中，添加项目中所需要的CDN资源
+
+3. 比如
+
+4. ```html
+   <!-- nprogress 的样式表文件 -->
+   <link rel="stylesheet"href="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.css" /> <!-- 富文本编辑器 的样式表文件 -->
+   <link rel="stylesheet" href="https://cdn.staticfile.org/quill/1.3.4/quill.core.min.css" /> 
+   <link rel="stylesheet" href="https://cdn.staticfile.org/quill/1.3.4/quill.snow.min.css" /> 
+   <link rel="stylesheet" href="https://cdn.staticfile.org/quill/1.3.4/quill.bubble.min.css" />
+   ```
+
+5. 需要在index.html文件的头部，添加$\color{red}{js}$的CDN资源引用
+
+6. ```
+   <script src="https://cdn.staticfile.org/vue/2.5.22/vue.min.js"></script> 
+   
+   <script 
+   src="https://cdn.staticfile.org/vue-router/3.0.1/vue-router.min.js"></script> 
+   
+   <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script> 
+   
+   <script src="https://cdn.staticfile.org/lodash.js/4.17.11/lodash.min.js"></script>
+   
+   <script src="https://cdn.staticfile.org/echarts/4.1.0/echarts.min.js"></script>
+   
+   <script src="https://cdn.staticfile.org/nprogress/0.2.0/nprogress.min.js"></script> 
+   
+   <!-- 富文本编辑器的 js 文件 --> <script src="https://cdn.staticfile.org/quill/1.3.4/quill.min.js"></script>
+   
+   <script src="https://cdn.jsdelivr.net/npm/vue-quill-editor@3.0.4/dist/vue-quill-editor.js"></script>
+   ```
+
+
+## 1.7通过CDN优化ELementUi的打包
+
+虽然在开发阶段，我们启用了 element-ui 组件的按需加载，尽可能的减少了打包的体积，但是那些被按需加载的组件，还是占用了较大的文件体积。此时，我们可以将 element-ui 中的组件，也通过 CDN 的形式来加载，这样能够进一步减小打包后的文件体积。
+
+具体操作流程如下：
+①在 main-prod.js 中，注释掉 element-ui 按需加载的代码
+②在 index.html 的头部区域中，通过 CDN 加载 element-ui 的 js 和 css 样式
+
+```js
+<!-- element-ui 的样式表文件 --> <link rel="stylesheet" href="https://cdn.staticfile.org/element-ui/2.8.2/theme-chalk/index.css" /> 
+
+<!-- element-ui 的 js 文件 --> 
+<script src="https://cdn.staticfile.org/element-ui/2.8.2/index.js"></script>
+```
+
+## 1.8首页内容自定制
+
+不同的打包环境下，首页内容可能会有所不同。我们可以通过插件的方式进行定制，插件配置如下
+
+```js
+chainWebpack: config => { config.when(process.env.NODE_ENV === 'production', config => { config.plugin('html').tap(args => { args[0].isProd = true return args }) }) config.when(process.env.NODE_ENV === 'development', config => { config.plugin('html').tap(args => { args[0].isProd = false return args }) }) 
+}
+```
+
+## 1.9路由懒加载配置
+
+```js
+
+const Right = () => import('components/rights/right.vue');
+```
+
+# 项目上线
+
+1. 通过node创建web服务器
+
+2. `创建 node 项目，并安装 express，通过 express 快速创建 web 服务器，将 vue 打包生成的 dist 文件夹，托管为静态资源即可，关键代码如下：`
+
+3. ```js
+   const express = require('express')
+   // 创建 web 服务器
+   const app = express()
+   // 托管静态资源
+   app.use(express.static('./dist'))
+   // 启动 web 服务器
+   app.listen(80, () => {
+   console.log('web server running at http://127.0.0.1')
+   })
+   ```
+
+4. 开启gzip设置
+
+5. 使用 gzip 可以减小文件体积，使传输速度更快。
+
+6. 可以通过服务器端使用 Express 做 gzip 压缩。其配置如下：
+
+7. ```js
+   // 安装相应包 npm install compression -S 
+   // 导入包 const compression = require('compression'); 
+   // 启用中间件 app.use(compression());
+   ```
+
+8. 
+
+
+
+
+
 
 
 
